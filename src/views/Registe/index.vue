@@ -3,7 +3,7 @@
     <!-- 头部区域 -->
     <van-nav-bar
       class="navbar"
-      title="账号登陆"
+      title="注册"
       left-arrow
       @click-left="onClickLeft"
     />
@@ -23,19 +23,27 @@
         placeholder="请输入密码"
         :rules="[{ required: true, message: '请填写密码' }]"
       />
+      <van-field
+        v-model="password"
+        type="password"
+        name="password"
+        placeholder="请再次输入密码"
+        :rules="[{ required: true, message: '请填写密码' }]"
+      />
+
       <div style="margin: 16px">
         <van-button color="#1cb676" block type="info" native-type="submit"
-          >登录</van-button
+          >注册</van-button
         >
       </div>
     </van-form>
 
-    <router-link class="reg" to="/registe">还没有账号，去注册~ </router-link>
+    <router-link class="reg" to="/login">已有账号，去登录~ </router-link>
   </div>
 </template>
 
 <script>
-import { loginApi } from '@/api/user'
+import { registApi } from '@/api/user'
 export default {
   data() {
     return { username: '', password: '' }
@@ -47,11 +55,11 @@ export default {
     },
     async onSubmit() {
       try {
-        const { data } = await loginApi(this.username, this.password)
+        const { data } = await registApi(this.username, this.password)
         // console.log(data)
-        this.$store.commit('setToken', data.body.token)
+        // this.$store.commit('setToken', data.body.token)
         this.$toast(data.description)
-        this.$router.push({ path: '/layout/my' })
+        this.$router.push({ path: '/login' })
       } catch (error) {
         console.log('error', error)
       }

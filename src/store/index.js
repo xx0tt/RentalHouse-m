@@ -5,13 +5,19 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    token: localStorage.getItem('token') || ''
   },
-  getters: {
-  },
+  getters: {},
   mutations: {
+    setToken(state, token) {
+      state.token = token
+      localStorage.setItem('token', `Bearer ${token}`)
+    },
+    delToken(state) {
+      state.token = ''
+      localStorage.removeItem('token')
+    }
   },
-  actions: {
-  },
-  modules: {
-  }
+  actions: {},
+  modules: {}
 })
