@@ -1,12 +1,7 @@
 <template>
   <div>
     <!-- 头部区域 -->
-    <van-nav-bar
-      class="navbar"
-      title="注册"
-      left-arrow
-      @click-left="onClickLeft"
-    />
+    <Header title="注册" />
 
     <!-- 表单区域 -->
     <van-form @submit="onSubmit">
@@ -43,12 +38,13 @@
 </template>
 
 <script>
+import Header from '@/components/Header.vue'
 import { registApi } from '@/api/user'
 export default {
   data() {
     return { username: '', password: '' }
   },
-
+  components: { Header },
   methods: {
     onClickLeft() {
       this.$router.back()
@@ -69,17 +65,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// 头部样式
-.navbar {
-  background-color: #21b97a;
-  /deep/ .van-nav-bar__title {
-    color: #fff;
-  }
-  /deep/ .van-icon-arrow-left {
-    color: #fff;
-  }
-}
-
 .reg {
   position: absolute;
   margin-top: 15px;

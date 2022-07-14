@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '@/store'
 
 const routerPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
@@ -11,7 +12,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: '/layout'
+    redirect: '/layout/home'
   },
   {
     path: '/layout',
@@ -42,11 +43,30 @@ const routes = [
   {
     path: '/registe',
     component: () => import('@/views/Registe')
+  },
+  {
+    path: '/favorate',
+    component: () => import('@/views/Favorate')
+  },
+  {
+    path: '/rent',
+    component: () => import('@/views/Rent')
   }
 ]
 
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  // console.log(to, from)
+  if (
+    (to.path === '/favorate' || to.path === '/rent') &&
+    !store.state.isLogin
+  ) {
+    return next('/login')
+  }
+  next()
 })
 
 export default router

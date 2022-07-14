@@ -1,13 +1,7 @@
 <template>
   <div>
     <!-- 头部区域 -->
-    <van-nav-bar
-      class="navbar"
-      title="账号登陆"
-      left-arrow
-      @click-left="onClickLeft"
-    />
-
+    <Header title="账号登陆" />
     <!-- 表单区域 -->
     <van-form @submit="onSubmit">
       <van-field
@@ -35,16 +29,14 @@
 </template>
 
 <script>
+import Header from '@/components/Header.vue'
 import { loginApi } from '@/api/user'
 export default {
   data() {
     return { username: '', password: '' }
   },
-
+  components: { Header },
   methods: {
-    onClickLeft() {
-      this.$router.back()
-    },
     async onSubmit() {
       try {
         const { data } = await loginApi(this.username, this.password)
@@ -61,17 +53,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// 头部样式
-.navbar {
-  background-color: #21b97a;
-  /deep/ .van-nav-bar__title {
-    color: #fff;
-  }
-  /deep/ .van-icon-arrow-left {
-    color: #fff;
-  }
-}
-
 .reg {
   position: absolute;
   margin-top: 15px;

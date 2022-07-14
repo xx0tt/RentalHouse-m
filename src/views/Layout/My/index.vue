@@ -4,10 +4,10 @@
       <img src="http://liufusong.top:8080/img/avatar.png" alt="" />
       <div class="myinfo">
         <div class="myicon">
-          <img src="http://liufusong.top:8080/img/profile/avatar.png" alt="" />
+          <img :src="`http://liufusong.top:8080${userInfo.avatar}`" alt="" />
         </div>
         <div class="myuser">
-          <div class="My_name">好客_845296</div>
+          <div class="My_name">{{ userInfo.nickname }}</div>
           <div class="My_auth">
             <van-button
               class="btn"
@@ -15,7 +15,7 @@
               color="#21b97a"
               size="mini"
               @click="exitFn"
-              >退出</van-button
+              >{{ $store.state.isLogin ? '退出' : '去登陆' }}</van-button
             >
           </div>
           <div class="My_edit">
@@ -27,8 +27,8 @@
     </div>
     <div>
       <van-grid :column-num="3">
-        <van-grid-item icon="star-o" text="我的收藏" />
-        <van-grid-item icon="wap-home-o" text="我的出租" />
+        <van-grid-item icon="star-o" to="/favorate" text="我的收藏" />
+        <van-grid-item icon="wap-home-o" to="/rent" text="我的出租" />
         <van-grid-item icon="clock-o" text="看房记录" />
         <van-grid-item icon="debit-pay" text="成为房主" />
         <van-grid-item icon="contact" text="个人资料" />
@@ -42,15 +42,45 @@
 </template>
 
 <script>
+import { getUserInfo } from '@/api/user'
 export default {
+  data() {
+    return {
+      userInfo: {
+        avatar: '/img/avatar.png',
+        nickname: '游客'
+      }
+    }
+  },
+  async created() {
+    try {
+      const { data } = await getUserInfo()
+      if (data && data.body) {
+        this.userInfo = data.body
+        this.$store.commit('setLogin', true)
+      }
+    } catch (error) {
+      console.log('error', error)
+    }
+  },
   methods: {
     exitFn() {
+      if (!this.$store.state.isLogin) {
+        return this.$router.push({
+          path: '/login'
+        })
+      }
+
       this.$dialog
         .confirm({ title: '标题', message: '弹窗内容' })
         .then(() => {
           this.$store.commit('delToken')
+          this.$store.commit('setLogin', false)
+          this.userInfo = {
+            avatar: '/img/avatar.png',
+            nickname: '游客'
+          }
           this.$toast('退出成功')
-          this.$router.push({ path: '/login' })
         })
         .catch(() => {})
     }
@@ -64,7 +94,7 @@ export default {
   .mytitle {
     position: relative;
     min-height: 300px;
-    background-color: skyblue;
+    // background-color: skyblue;
     img {
       width: 100%;
     }

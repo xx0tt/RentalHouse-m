@@ -23,3 +23,24 @@ export const registApi = (username, password) => {
     }
   })
 }
+
+// 获取用户信息
+export const getUserInfo = () => {
+  return request({
+    url: '/user'
+  })
+}
+
+// 获取收藏列表
+export const getfavorites = () => {
+  return request({
+    url: '/user/favorites'
+  })
+}
+
+// 获取我的出租列表
+export const getMyHouse = () => {
+  return request({
+    url: '/user/houses'
+  })
+}
