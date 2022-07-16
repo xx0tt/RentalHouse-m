@@ -17,6 +17,7 @@ const routes = [
   {
     path: '/layout',
     component: () => import('@/views/Layout'),
+    redirect: '/layout/home',
     children: [
       {
         path: 'home',
@@ -50,7 +51,21 @@ const routes = [
   },
   {
     path: '/rent',
-    component: () => import('@/views/Rent')
+    component: () => import('@/views/Rent'),
+    children: [
+      {
+        path: 'rentlist',
+        component: () => import('@/views/Rent/RentList')
+      },
+      {
+        path: 'addrent',
+        component: () => import('@/views/Rent/AddRent')
+      }
+    ]
+  },
+  {
+    path: '/city',
+    component: () => import('@/views/City')
   }
 ]
 
@@ -61,7 +76,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   // console.log(to, from)
   if (
-    (to.path === '/favorate' || to.path === '/rent') &&
+    (to.path === '/favorate' || to.path === '/rent/rentlist') &&
     !store.state.isLogin
   ) {
     return next('/login')

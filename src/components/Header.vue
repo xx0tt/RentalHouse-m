@@ -13,7 +13,8 @@ export default {
     title: {
       type: String,
       required: true
-    }
+    },
+    fixed: Boolean
   },
   methods: {
     onClickLeft() {
@@ -29,9 +30,11 @@ export default {
   background-color: #21b97a;
   /deep/ .van-nav-bar__title {
     color: #fff;
+    font-size: 18px;
   }
   /deep/ .van-icon-arrow-left {
     color: #fff;
+    font-size: 22px;
   }
 }
 </style>

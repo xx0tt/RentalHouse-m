@@ -28,7 +28,7 @@
     <div>
       <van-grid :column-num="3">
         <van-grid-item icon="star-o" to="/favorate" text="我的收藏" />
-        <van-grid-item icon="wap-home-o" to="/rent" text="我的出租" />
+        <van-grid-item icon="wap-home-o" to="/rent/rentlist" text="我的出租" />
         <van-grid-item icon="clock-o" text="看房记录" />
         <van-grid-item icon="debit-pay" text="成为房主" />
         <van-grid-item icon="contact" text="个人资料" />

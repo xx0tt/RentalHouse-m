@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     token: localStorage.getItem('token') || '',
-    isLogin: false
+    isLogin: false,
+    inCity: { label: '北京', value: 'AREA|88cff55c-aaa4-e2e0' } // 默认北京
   },
   getters: {},
   mutations: {
@@ -20,6 +21,9 @@ export default new Vuex.Store({
     },
     setLogin(state, val) {
       state.isLogin = val
+    },
+    setinCity(state, cityObj) {
+      state.inCity = cityObj
     }
   },
   actions: {},

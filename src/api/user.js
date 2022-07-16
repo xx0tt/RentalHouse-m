@@ -44,3 +44,19 @@ export const getMyHouse = () => {
     url: '/user/houses'
   })
 }
+
+// 发布房源
+export const AddHouses = (data) => {
+  return request({
+    url: '/user/houses',
+    method: 'POST',
+    data
+  })
+}
+
+// 发布房源所需条件
+export const AddHouseNeedApi = () => {
+  return request({
+    url: '/houses/params'
+  })
+}

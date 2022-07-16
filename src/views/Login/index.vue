@@ -38,14 +38,20 @@ export default {
   components: { Header },
   methods: {
     async onSubmit() {
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0
+      })
       try {
         const { data } = await loginApi(this.username, this.password)
         // console.log(data)
         this.$store.commit('setToken', data.body.token)
-        this.$toast(data.description)
         this.$router.push({ path: '/layout/my' })
+        this.$toast(data.description)
       } catch (error) {
-        console.log('error', error)
+        // console.log('========', error)
+        this.$toast(error.response.data.message)
       }
     }
   }
