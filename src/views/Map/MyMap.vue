@@ -18,8 +18,8 @@
       :key="index"
       :content="`<p>${item.label}</p><p>${item.count}套</p>`"
       :position="{
-        lng: '116.41' && item && item.coord && item.coord.longitude,
-        lat: '39.915' && item && item.coord && item.coord.latitude
+        lng: '116.41' && item?.coord?.longitude,
+        lat: '39.915' && item?.coord?.latitude
       }"
       :labelStyle="{ color: '#fff', fontSize: '12px' }"
       @click="clickFn(item.value, item.coord)"

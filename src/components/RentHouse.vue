@@ -70,7 +70,12 @@
       <!--  地图  -->
       <div class="map">
         <p>小区：天山星城</p>
-        <div>map区域</div>
+        <div v-if="HouseInfo?.coord">
+          <MapSmall
+            :coord="HouseInfo.coord"
+            :community="HouseInfo.community"
+          ></MapSmall>
+        </div>
       </div>
 
       <!-- 房屋配套 -->
@@ -216,6 +221,7 @@
 <script>
 import Header from '@/components/Header.vue'
 import HouseItem from './HouseItem.vue'
+import MapSmall from './MapSmall.vue'
 import {
   getHouseInfoApi,
   isFavoritesApi,
@@ -259,14 +265,24 @@ export default {
     await this.getHouseInfo()
     await this.isFavorites()
   },
-  components: { Header, HouseItem },
+  components: { Header, HouseItem, MapSmall },
   methods: {
     // 获取房屋具体信息
     async getHouseInfo() {
       // f12e5910-dcb3-1460
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0
+      })
       const { data } = await getHouseInfoApi(this.$route.params.cityid)
       // console.log(data)
       this.HouseInfo = data.body
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 1
+      })
     },
 
     // 房屋是否收藏
