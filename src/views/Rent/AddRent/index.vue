@@ -100,7 +100,7 @@
     </van-field>
 
     <van-cell-group> <van-field label="房屋配置" readonly /></van-cell-group>
-    <van-grid :column-num="5" class="MyIcon">
+    <van-grid :border="false" :column-num="5" class="MyIcon">
       <van-grid-item
         :class="{ Myavtive: supporting.includes('衣柜') }"
         text="衣柜"

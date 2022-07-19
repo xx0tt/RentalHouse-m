@@ -66,6 +66,14 @@ const routes = [
   {
     path: '/city',
     component: () => import('@/views/City')
+  },
+  {
+    path: '/map',
+    component: () => import('@/views/Map')
+  },
+  {
+    path: '/detail/:cityid',
+    component: () => import('@/components/RentHouse')
   }
 ]
 
@@ -77,7 +85,7 @@ router.beforeEach((to, from, next) => {
   // console.log(to, from)
   if (
     (to.path === '/favorate' || to.path === '/rent/rentlist') &&
-    !store.state.isLogin
+    !store.state.token
   ) {
     return next('/login')
   }

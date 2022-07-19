@@ -12,6 +12,14 @@ export const loginApi = (username, password) => {
   })
 }
 
+// 登出接口
+export const logOutApi = () => {
+  return request({
+    url: '/user/logout',
+    method: 'POST'
+  })
+}
+
 // 注册接口
 export const registApi = (username, password) => {
   return request({

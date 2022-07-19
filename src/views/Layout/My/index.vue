@@ -1,10 +1,19 @@
 <template>
   <div class="box">
     <div class="mytitle">
-      <img src="http://liufusong.top:8080/img/avatar.png" alt="" />
+      <img
+        v-if="!!$store.state.token"
+        :src="`http://liufusong.top:8080${userInfo.avatar}`"
+        alt=""
+      />
+      <img
+        v-else
+        :src="`http://liufusong.top:8080/img/profile/bg.png`"
+        alt=""
+      />
       <div class="myinfo">
         <div class="myicon">
-          <img :src="`http://liufusong.top:8080${userInfo.avatar}`" alt="" />
+          <img src="http://liufusong.top:8080/img/profile/avatar.png" alt="" />
         </div>
         <div class="myuser">
           <div class="My_name">{{ userInfo.nickname }}</div>
@@ -15,7 +24,7 @@
               color="#21b97a"
               size="mini"
               @click="exitFn"
-              >{{ $store.state.isLogin ? '退出' : '去登陆' }}</van-button
+              >{{ $store.state.token ? '退出' : '去登陆' }}</van-button
             >
           </div>
           <div class="My_edit">
@@ -26,7 +35,7 @@
       </div>
     </div>
     <div>
-      <van-grid :column-num="3">
+      <van-grid :column-num="3" clickable>
         <van-grid-item icon="star-o" to="/favorate" text="我的收藏" />
         <van-grid-item icon="wap-home-o" to="/rent/rentlist" text="我的出租" />
         <van-grid-item icon="clock-o" text="看房记录" />
@@ -42,7 +51,7 @@
 </template>
 
 <script>
-import { getUserInfo } from '@/api/user'
+import { getUserInfo, logOutApi } from '@/api'
 export default {
   data() {
     return {
@@ -52,20 +61,25 @@ export default {
       }
     }
   },
-  async created() {
-    try {
-      const { data } = await getUserInfo()
-      if (data && data.body) {
-        this.userInfo = data.body
-        this.$store.commit('setLogin', true)
-      }
-    } catch (error) {
-      console.log('error', error)
-    }
+  created() {
+    this.getUser()
   },
   methods: {
+    // 获取用户信息
+    async getUser() {
+      try {
+        const { data } = await getUserInfo()
+        if (!data.body) return this.$store.commit('setToken', '')
+        this.userInfo = data.body
+      } catch (error) {
+        console.log('error', error)
+        this.$store.commit('setToken', '')
+        this.$toast.fail('请先登录')
+      }
+    },
     exitFn() {
-      if (!this.$store.state.isLogin) {
+      // 如果未登录
+      if (!this.$store.state.token) {
         return this.$router.push({
           path: '/login'
         })
@@ -73,9 +87,10 @@ export default {
 
       this.$dialog
         .confirm({ title: '标题', message: '弹窗内容' })
-        .then(() => {
+        .then(async () => {
+          const { data } = await logOutApi()
+          console.log(data)
           this.$store.commit('delToken')
-          this.$store.commit('setLogin', false)
           this.userInfo = {
             avatar: '/img/avatar.png',
             nickname: '游客'

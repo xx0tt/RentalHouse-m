@@ -13,8 +13,7 @@ export default {
     title: {
       type: String,
       required: true
-    },
-    fixed: Boolean
+    }
   },
   methods: {
     onClickLeft() {

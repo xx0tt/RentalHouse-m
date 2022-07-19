@@ -1,10 +1,10 @@
 <template>
-  <div class="box">
+  <div class="box" @click="clickFn">
     <div class="houseImg">
       <img :src="`http://liufusong.top:8080${houseitem.houseImg}`" alt="" />
     </div>
     <div class="houseContent">
-      <h3>{{ houseitem.title }}</h3>
+      <h4>{{ houseitem.title }}</h4>
       <div class="info">{{ houseitem.desc }}</div>
       <van-tag
         class="tag"
@@ -29,6 +29,11 @@ export default {
       type: Object,
       required: true,
       default: () => {}
+    }
+  },
+  methods: {
+    clickFn() {
+      this.$router.push(`/detail/${this.houseitem.houseCode}`)
     }
   }
 }
@@ -56,13 +61,14 @@ export default {
     overflow: hidden;
     line-height: 22px;
     padding-left: 12px;
-    h3 {
+    h4 {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
       vertical-align: middle;
       margin: 0;
       font-size: 16px;
+      font-weight: 700;
       color: #394043;
     }
     .info {

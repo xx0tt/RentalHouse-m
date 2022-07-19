@@ -21,7 +21,7 @@
           <i class="iconfont icon-xiajiantou"></i>
         </div>
         <van-search v-model="value" placeholder="请输入小区或地址" />
-        <i class="iconfont icon-ditu"></i>
+        <i class="iconfont icon-ditu" @click="$router.push('/map')"></i>
       </div>
     </div>
 
@@ -42,7 +42,7 @@
           </div>
         </template>
       </van-grid-item>
-      <van-grid-item>
+      <van-grid-item to="/map">
         <template #default>
           <div class="box">
             <img src="../../../assets/img/map.png" alt="" />

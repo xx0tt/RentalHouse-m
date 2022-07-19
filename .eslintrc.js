@@ -18,6 +18,8 @@ module.exports = {
     'no-void': 'off',
     eqeqeq: 'off',
     'no-sequences': 'off',
-    'no-self-assign': 'off'
+    'no-self-assign': 'off',
+    'no-undef': 'off',
+    'no-unused-vars': 'off'
   }
 }
