@@ -1,28 +1,18 @@
 <template>
-  <baidu-map
-    class="map"
-    :center="center"
-    :zoom="zoom"
-    @ready="handler"
-    :double-click-zoom="false"
-  >
-    <!-- 地图控件 放大缩小 -->
-    <bm-navigation
-      anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
-      type="BMAP_NAVIGATION_CONTROL_LARGE"
-    ></bm-navigation>
+  <baidu-map :center="center" :zoom="zoom">
+    <!-- 比例尺 -->
+    <bm-scale anchor="BMAP_ANCHOR_BOTTOM_LEFT"></bm-scale>
+    <!-- 缩放按钮 -->
+    <bm-navigation anchor="BMAP_ANCHOR_BOTTOM_RIGHT"></bm-navigation>
 
     <!-- 标签 -->
     <bm-label
       v-for="(item, index) in cityList"
       :key="index"
       :content="`<p>${item.label}</p><p>${item.count}套</p>`"
-      :position="{
-        lng: '116.41' && item?.coord?.longitude,
-        lat: '39.915' && item?.coord?.latitude
-      }"
+      :position="{ lng: item?.coord?.longitude, lat: item?.coord?.latitude }"
       :labelStyle="{ color: '#fff', fontSize: '12px' }"
-      @click="clickFn(item.value, item.coord)"
+      @click="clickFn(item)"
     />
   </baidu-map>
 </template>
@@ -30,8 +20,9 @@
 export default {
   data() {
     return {
-      center: { lng: 116.41, lat: 39.915 },
-      zoom: 11
+      center: this.$store.state.inCity.label,
+      zoom: 11,
+      num: 0 // 2,
     }
   },
   props: {
@@ -41,58 +32,19 @@ export default {
     }
   },
   methods: {
-    handler({ BMap, map }) {
-      console.log(BMap, map)
-      this.center.lng = this.area.lng
-      this.center.lat = this.area.lat
-    },
-    // 被点击后，激活父级内部事件，并把城市id传递给父级
-    clickFn(val, coord) {
-      this.center.lng = coord.longitude
-      this.center.lat = coord.latitude
-      this.zoom = 13
-      this.$emit('Myclick', val)
-    }
-  },
-  computed: {
-    area() {
-      const val = this.$store.state.inCity.label
-      switch (val) {
-        case '北京':
-          return {
-            lng: 116.41,
-            lat: 39.915
-          }
-        case '上海':
-          return {
-            lng: 121.48,
-            lat: 31.237
-          }
-        case '深圳':
-          return {
-            lng: 114.06,
-            lat: 22.548
-          }
-        case '广州':
-          return {
-            lng: 113.27,
-            lat: 23.136
-          }
-      }
-      return {
-        lng: 116.41,
-        lat: 39.915
-      }
+    clickFn(item) {
+      this.center = { lng: item.coord?.longitude, lat: item?.coord?.latitude }
+      this.zoom = 14
+      this.num++
+      console.log(this.num)
+      // 调用父级的方法重新获取数据
+      this.$parent.getAreaMap(item.value)
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.map {
-  width: 100%;
-  height: 621px;
-}
 /deep/.BMapLabel {
   background-color: #1db879 !important;
   border-radius: 50%;

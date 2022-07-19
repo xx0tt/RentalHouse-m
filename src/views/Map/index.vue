@@ -1,53 +1,52 @@
 <template>
   <div>
-    <Header title="地图找房"></Header>
-    <Mymap :cityList="cityList" @Myclick="findFn"></Mymap>
+    <!-- 头部 -->
+    <Header title="地图找房" />
+
+    <!-- 地图 -->
+    <MyMap class="map" :cityList="cityList"></MyMap>
   </div>
 </template>
 
 <script>
 import Header from '@/components/Header.vue'
-import Mymap from './MyMap.vue'
+import MyMap from './MyMap.vue'
 import { getAreaMapApi } from '@/api'
 export default {
   data() {
     return {
-      cityList: [] // 房源列表
+      cityList: []
     }
   },
-  components: { Mymap, Header },
-  async created() {
-    await this.getCity(this.$store.state.inCity.value)
+  components: { Header, MyMap },
+  created() {
+    this.getAreaMap(this.$store.state.inCity.value)
   },
   methods: {
-    // 获取房屋列表
-    async getCity(cityId) {
+    // 获取区域房源数据
+    async getAreaMap(CityValue) {
       this.$toast.loading({
         message: '加载中...',
         forbidClick: true,
         duration: 0
       })
-      try {
-        const { data } = await getAreaMapApi(cityId)
-        console.log(data)
-        this.cityList = data.body
-        console.log(this.cityList)
-        this.$toast.loading({
-          message: '加载中...',
-          forbidClick: true,
-          duration: 1
-        })
-      } catch (error) {
-        this.$toast.fail('请求失败，请稍后再试')
-      }
-    },
+      const { data } = await getAreaMapApi(CityValue)
+      console.log(data)
+      this.cityList = data.body
 
-    // 点击后继续获取房屋列表
-    async findFn(val) {
-      await this.getCity(val)
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 1
+      })
     }
   }
 }
 </script>
 
-<style></style>
+<style lang="less" scoped>
+.map {
+  width: 100%;
+  height: 620px;
+}
+</style>

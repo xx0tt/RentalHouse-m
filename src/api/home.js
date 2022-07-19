@@ -48,7 +48,7 @@ export const getAreaMapApi = (val) => {
   return request({
     url: '/area/map',
     params: {
-      id: val // 城市ID
+      id: val // 区域ID
     }
   })
 }

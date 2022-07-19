@@ -14,7 +14,7 @@
             v-for="(item, index) in cityList[item]"
             :key="index"
             :title="item.label || '暂无城市'"
-            @click="getcityInfo(item.label)"
+            @click="getcityInfo(item)"
           />
         </div>
       </van-index-bar>
@@ -24,7 +24,7 @@
 
 <script>
 import Header from '@/components/Header.vue'
-import { getCityList, getHotCity, getCityInfoApi } from '@/api/home'
+import { getCityList, getHotCity } from '@/api/home'
 export default {
   data() {
     return {
@@ -64,10 +64,12 @@ export default {
     this.getCity()
   },
   computed: {
+    // 城市首字母
     cityFirstName() {
       const arr = Object.keys(this.cityList)
       return arr
     },
+    // 列表索引
     indexList() {
       const arr = Object.keys(this.cityList)
       arr[0] = '热'
@@ -76,6 +78,7 @@ export default {
     }
   },
   methods: {
+    // 获取城市列表
     async getCity() {
       this.$toast.loading({
         message: '加载中...',
@@ -103,13 +106,8 @@ export default {
         duration: 1
       })
     },
-    async getcityInfo(val) {
-      console.log(val)
-      const arr = ['北京', '上海', '广州', '深圳']
-      if (!arr.includes(val)) return this.$toast('该城市暂无房源')
-      const { data } = await getCityInfoApi(val)
-
-      this.$store.commit('setinCity', data.body)
+    async getcityInfo(item) {
+      this.$store.commit('setinCity', { label: item.label, value: item.value })
       this.$router.push('/layout/home')
     }
   }
