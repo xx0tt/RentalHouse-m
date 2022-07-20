@@ -29,3 +29,13 @@ export const delFavoritesApi = (houseCode) => {
     method: 'DELETE'
   })
 }
+
+// 条件查询房屋信息
+export const getConditionApi = (cityId) => {
+  return request({
+    url: '/houses',
+    params: {
+      cityId
+    }
+  })
+}
