@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { swiperApi, getGroups } from '@/api/home'
+import { swiperApi, getGroups, getUserInfo } from '@/api'
 export default {
   data() {
     return {
@@ -99,8 +99,22 @@ export default {
 
       this.swiperList = res.data.body
       this.groupList = res2.data.body
+
+      await this.getUser()
     } catch (error) {
       console.log('error', error)
+    }
+  },
+  methods: {
+    // 获取用户信息
+    async getUser() {
+      try {
+        const { data } = await getUserInfo()
+        // console.log(data)
+        if (!data.body) return this.$store.commit('setToken', '')
+      } catch (error) {
+        console.log('登录错误', error)
+      }
     }
   }
 }

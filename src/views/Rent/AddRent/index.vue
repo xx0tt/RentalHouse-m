@@ -349,13 +349,20 @@ export default {
       })
       if (res.data.status !== 200) return this.$toast.fail('发布失败！')
       if (res.data.status === 200) {
-        Dialog.confirm({
-          title: '提示',
-          message: '房源发布成功',
-          confirmButtonText: '继续发布',
-          confirmButtonColor: '#108ee9',
-          cancelButtonText: '去查看'
+        this.$toast.loading({
+          message: '加载中...',
+          forbidClick: true,
+          duration: 1
         })
+
+        this.$dialog
+          .confirm({
+            title: '提示',
+            message: '房源发布成功',
+            confirmButtonText: '继续发布',
+            confirmButtonColor: '#108ee9',
+            cancelButtonText: '去查看'
+          })
           .then(() => {
             // 继续发布  全部清空
             this.community = ''
@@ -372,6 +379,7 @@ export default {
             this.houseImgArr = []
           })
           .catch(() => {
+            console.log('取消')
             // 去查看
             this.$router.push('/layout/findhouse')
           })

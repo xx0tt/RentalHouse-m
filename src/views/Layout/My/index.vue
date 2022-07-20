@@ -69,12 +69,13 @@ export default {
     async getUser() {
       try {
         const { data } = await getUserInfo()
-        if (!data.body) return this.$store.commit('setToken', '')
+        if (!data.body) {
+          // this.$toast.fail('请先登录')
+          return this.$store.commit('setToken', '')
+        }
         this.userInfo = data.body
       } catch (error) {
         console.log('error', error)
-        this.$store.commit('setToken', '')
-        this.$toast.fail('请先登录')
       }
     },
     exitFn() {
