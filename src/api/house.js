@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import store from '@/store'
 
 // 获取房屋具体信息
 export const getHouseInfoApi = (houseCode) => {
@@ -37,5 +38,25 @@ export const getConditionApi = (cityId) => {
     params: {
       cityId
     }
+  })
+}
+
+// 小区关键词查询
+export const KeywordQueryApi = (keywords) => {
+  return request({
+    url: '/area/community',
+    params: {
+      name: keywords, // 关键词
+      id: store.state.inCity.value // 当前定位城市ID
+    }
+  })
+}
+
+// 房屋图像上传
+export const HouseImgApi = (file) => {
+  return request({
+    url: '/houses/image',
+    method: 'POST',
+    data: file
   })
 }

@@ -59,7 +59,12 @@ const routes = [
       },
       {
         path: 'addrent',
+        name: 'AddRent',
         component: () => import('@/views/Rent/AddRent')
+      },
+      {
+        path: 'search',
+        component: () => import('@/views/Rent/AddRent/Search')
       }
     ]
   },
@@ -84,7 +89,9 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   // console.log(to, from)
   if (
-    (to.path === '/favorate' || to.path === '/rent/rentlist') &&
+    (to.path === '/favorate' ||
+      to.path === '/rent/rentlist' ||
+      to.path === '/rent/addrent') &&
     !store.state.token
   ) {
     return next('/login')

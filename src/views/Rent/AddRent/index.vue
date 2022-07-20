@@ -5,14 +5,23 @@
     <van-cell-group>
       <van-field class="title" label="房源信息" readonly
     /></van-cell-group>
+    <!-- 小区名称 -->
     <van-cell-group>
-      <van-field label="小区名称" placeholder="请输入小区名称" />
+      <van-field
+        @click="$router.push('/rent/search')"
+        label="小区名称"
+        :value="villageName"
+        placeholder="请输入小区名称"
+        readonly
+      />
     </van-cell-group>
+    <!-- 租金 -->
     <van-cell-group>
       <van-field v-model="price" label="租  金" placeholder="请输入租金/月">
         <template #right-icon>￥/月</template>
       </van-field>
     </van-cell-group>
+    <!-- 建筑面积 -->
     <van-cell-group>
       <van-field v-model="size" label="建筑面积" placeholder="请输入建筑面积">
         <template #right-icon>㎡</template>
@@ -82,6 +91,7 @@
 
     <!-- 选择框 -->
 
+    <!-- 房屋标题 -->
     <van-cell-group>
       <van-field label="房屋标题" readonly />
       <van-field
@@ -92,13 +102,19 @@
         placeholder="请输入标题（例如：整租 小区名 2室 5000元）"
     /></van-cell-group>
 
+    <!-- 房屋图像 -->
     <van-cell-group> <van-field label="房屋图像" readonly /></van-cell-group>
     <van-field name="houseImg">
       <template #input>
-        <van-uploader v-model="houseImg" />
+        <van-uploader
+          @delete="deleteImg"
+          v-model="houseImg"
+          :after-read="afterRead"
+        />
       </template>
     </van-field>
 
+    <!-- 房屋配置 -->
     <van-cell-group> <van-field label="房屋配置" readonly /></van-cell-group>
     <van-grid :border="false" :column-num="5" class="MyIcon">
       <van-grid-item
@@ -200,12 +216,15 @@
 
 <script>
 import Header from '@/components/Header.vue'
-import { AddHouses, AddHouseNeedApi } from '@/api/user'
+import { AddHouses, AddHouseNeedApi, HouseImgApi } from '@/api'
 export default {
+  name: 'AddRent',
   data() {
     return {
-      price: '',
-      size: '',
+      community: '', // 小区数据
+      villageName: '', // 小区名称
+      price: '', // 租金
+      size: '', // 面积
       huxing: '',
       louceng: '',
       chaoxiang: '',
@@ -215,10 +234,11 @@ export default {
       showPicker: false,
       showPicker1: false,
       showPicker2: false,
-      title: '',
-      houseImg: [],
-      description: '',
-      supporting: [],
+      title: '', // 房屋标题
+      houseImg: [], // 房屋图像
+      supporting: [], // 房屋配置
+      description: '', // 房屋描述
+      houseImgArr: [], // 上传房屋图像
       floorList: [],
       orientedList: [],
       roomTypeList: [],
@@ -226,9 +246,10 @@ export default {
     }
   },
   async created() {
+    // 获取房屋配置必须项
     try {
       const { data } = await AddHouseNeedApi()
-      console.log(data)
+
       this.floorList = data.body.floor
       this.orientedList = data.body.oriented
       this.roomTypeList = data.body.roomType
@@ -251,6 +272,8 @@ export default {
       this.chaoxiang = value
       this.showPicker2 = false
     },
+
+    // 取消编辑按钮
     leftFn() {
       this.$dialog
         .confirm({
@@ -267,6 +290,8 @@ export default {
           this.$router.push({ path: '/layout/home' })
         })
     },
+
+    // 添加/取消 电器
     addApp(val) {
       // 查看该数组中是否包含该电器，如果有，则删除
       if (this.supporting.includes(val)) {
@@ -275,9 +300,33 @@ export default {
       } else {
         this.supporting.push(val)
       }
-      console.log(this.supporting)
     },
+
+    // 获取图片
+    async afterRead(file) {
+      // 此时可以自行将文件上传至服务器
+      const formData = new FormData()
+      formData.append('file', file.file)
+
+      const { data } = await HouseImgApi(formData)
+
+      this.houseImgArr.push(data.body[0])
+    },
+
+    // 删除图片
+    deleteImg(file, detail) {
+      this.houseImgArr.splice(detail.index, 1)
+      console.log(this.houseImgArr)
+    },
+
+    // 提交
     async submitHouse() {
+      if (!this.houseImgArr) return this.$toast('请先上传房源图片')
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0
+      })
       const oriented = this.orientedList.filter(
         (item) => item.label === this.chaoxiang
       )
@@ -285,20 +334,55 @@ export default {
         (item) => item.label === this.huxing
       )
       const floor = this.floorList.filter((item) => item.label === this.louceng)
+
       const res = await AddHouses({
         title: this.title, // 标题 =
         description: this.description, // 描述 =
-        houseImg: this.houseImg, // 房屋图片
-        oriented: oriented.value, // 朝向 =
+        houseImg: this.houseImgArr.join('|'), // 房屋图片
+        oriented: oriented[0].value, // 朝向 =
         supporting: this.supporting.join('|'), // 电器 =
         price: this.price, // 价格 =
-        roomType: roomType.value, // 户型 =
+        roomType: roomType[0].value, // 户型 =
         size: this.size, // 面积 =
-        floor: floor.value, // 楼层
-        community: '' // 地址
+        floor: floor[0].value, // 楼层
+        community: this.community // 地址
       })
-      console.log(res)
+      if (res.data.status !== 200) return this.$toast.fail('发布失败！')
+      if (res.data.status === 200) {
+        Dialog.confirm({
+          title: '提示',
+          message: '房源发布成功',
+          confirmButtonText: '继续发布',
+          confirmButtonColor: '#108ee9',
+          cancelButtonText: '去查看'
+        })
+          .then(() => {
+            // 继续发布  全部清空
+            this.community = ''
+            this.villageName = ''
+            this.price = ''
+            this.size = ''
+            this.huxing = ''
+            this.louceng = ''
+            this.chaoxiang = ''
+            this.title = ''
+            this.houseImg = []
+            this.supporting = []
+            this.description = ''
+            this.houseImgArr = []
+          })
+          .catch(() => {
+            // 去查看
+            this.$router.push('/layout/findhouse')
+          })
+      }
     }
+  },
+  // 激活后
+  activated() {
+    // 获取小区数据
+    this.community = this.$route.params.community
+    this.villageName = this.$route.params.villageName
   }
 }
 </script>
@@ -330,9 +414,13 @@ export default {
 }
 .footer {
   display: flex;
-
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
   button {
     flex: 1;
+    height: 45px;
   }
 }
 
@@ -343,9 +431,9 @@ export default {
         color: #21b97a;
       }
     }
-    /deep/ span.van-grid-item__text {
-      color: #21b97a !important;
-    }
   }
+}
+.Myavtive /deep/.van-grid-item__text {
+  color: #21b97a;
 }
 </style>

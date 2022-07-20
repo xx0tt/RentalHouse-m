@@ -31,7 +31,7 @@ export default {
   data() {
     return {
       cityList: [],
-      show: true, // false
+      show: false, // false
       houseList: []
     }
   },
@@ -60,9 +60,20 @@ export default {
 
     // 根据条件查询房源
     async getCondition(cityId) {
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0
+      })
       const { data } = await getConditionApi(cityId)
       console.log(data)
       this.houseList = data.body.list
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 1
+      })
+      this.show = true
     }
   }
 }

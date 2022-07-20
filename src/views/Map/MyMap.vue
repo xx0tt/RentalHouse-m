@@ -59,8 +59,7 @@ export default {
   data() {
     return {
       center: this.$store.state.inCity.label,
-      num: 0, // 3,
-      show: false
+      num: 0 // 3,
     }
   },
   props: {
@@ -74,7 +73,6 @@ export default {
       this.center = { lng: item?.coord?.longitude, lat: item?.coord?.latitude }
 
       if (this.num >= 3) {
-        this.$parent.show = true
         // 调用父级条件查询
         this.$parent.getCondition(item.value)
       } else {
