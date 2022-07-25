@@ -33,6 +33,7 @@
     <van-field
       readonly
       clickable
+      is-link
       name="huxing"
       :value="huxing"
       label="户  型"
@@ -52,6 +53,7 @@
     <!-- 所在楼层 -->
     <van-field
       readonly
+      is-link
       clickable
       name="louceng"
       :value="louceng"
@@ -73,6 +75,7 @@
     <van-field
       readonly
       clickable
+      is-link
       name="chaoxiang"
       :value="chaoxiang"
       label="朝向"

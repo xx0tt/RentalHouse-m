@@ -80,3 +80,11 @@ export const getSonCityApi = (code) => {
     params: { id: code } // 地区的code
   })
 }
+
+// 根据条件查询房屋
+export const criteriaQueryHouse = (obj) => {
+  return request({
+    url: '/houses',
+    params: obj
+  })
+}
