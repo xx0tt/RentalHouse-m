@@ -30,11 +30,7 @@ export default {
       })
       const { data } = await getfavorites()
       this.favoriteList = data.body
-      this.$toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        duration: 1
-      })
+      this.$toast.clear()
     } catch (error) {
       console.log('error', error)
     }

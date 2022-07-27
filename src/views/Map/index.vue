@@ -50,11 +50,7 @@ export default {
       const { data } = await getAreaMapApi(CityValue)
       console.log(data)
       this.cityList = data.body
-      this.$toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        duration: 1
-      })
+      this.$toast.clear()
       this.$children[1].num++
     },
 
@@ -68,11 +64,7 @@ export default {
       const { data } = await getConditionApi(cityId)
       console.log(data)
       this.houseList = data.body.list
-      this.$toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        duration: 1
-      })
+      this.$toast.clear()
       this.show = true
     }
   }

@@ -56,11 +56,7 @@ export default {
       })
       const { data } = await KeywordQueryApi(this.value)
       this.communityList = data.body
-      this.$toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        duration: 1
-      })
+      this.$toast.clear()
     },
     // 点击小区
     clickFn(item) {

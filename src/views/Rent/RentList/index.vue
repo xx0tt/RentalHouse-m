@@ -31,17 +31,9 @@ export default {
       const { data } = await getMyHouse()
       this.MyhouseList = data.body
       // console.log(data.body)
-      this.$toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        duration: 1
-      })
+      this.$toast.clear()
     } catch (error) {
-      this.$toast.fail({
-        message: '加载失败...',
-        forbidClick: true,
-        duration: 1
-      })
+      this.$toast.fail('加载失败')
     }
   },
   components: { HouseItem, Header }

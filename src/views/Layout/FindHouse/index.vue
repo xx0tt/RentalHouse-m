@@ -153,11 +153,7 @@ export default {
         )
         this.columns[0].children[0].children = [{ text: '' }]
         this.columns[1].children[0].children = [{ text: '' }]
-        this.$toast.loading({
-          message: '加载中...',
-          forbidClick: true,
-          duration: 1
-        })
+        this.$toast.clear()
       } catch (error) {
         console.log(error.response.data)
         this.$toast.fail('请求错误，请稍后重试')
@@ -174,11 +170,7 @@ export default {
         })
         const { data } = await criteriaQueryHouse(obj)
         console.log(data)
-        this.$toast.loading({
-          message: '加载中...',
-          forbidClick: true,
-          duration: 1
-        })
+        this.$toast.clear()
         if (data.body.list.length === 0) return (this.finished = true)
         this.cityList.push(...data.body.list)
         this.criteriaQuery.start = this.criteriaQuery.start + 11

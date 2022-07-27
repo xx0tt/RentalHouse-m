@@ -100,11 +100,7 @@ export default {
         }
       }
 
-      this.$toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        duration: 1
-      })
+      this.$toast.clear()
     },
     async getcityInfo(item) {
       this.$store.commit('setinCity', { label: item.label, value: item.value })

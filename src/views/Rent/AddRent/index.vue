@@ -352,11 +352,7 @@ export default {
       })
       if (res.data.status !== 200) return this.$toast.fail('发布失败！')
       if (res.data.status === 200) {
-        this.$toast.loading({
-          message: '加载中...',
-          forbidClick: true,
-          duration: 1
-        })
+        this.$toast.clear()
 
         this.$dialog
           .confirm({
