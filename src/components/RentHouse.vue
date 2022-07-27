@@ -231,8 +231,8 @@ import {
 export default {
   data() {
     return {
-      HouseInfo: {},
       isFavorite: false,
+      HouseInfo: {},
       fakeHouseItem: [
         {
           houseImg: '/img/message/1.png',
@@ -261,9 +261,9 @@ export default {
       ]
     }
   },
-  async created() {
-    await this.getHouseInfo()
-    await this.isFavorites()
+  created() {
+    this.getHouseInfo()
+    this.isFavorites()
   },
   components: { Header, HouseItem, MapSmall },
   methods: {
@@ -287,12 +287,17 @@ export default {
 
     // 房屋是否收藏
     async isFavorites() {
-      const { data } = await isFavoritesApi(this.$route.params.cityid)
-      this.isFavorite = data.body.isFavorite
+      try {
+        const { data } = await isFavoritesApi(this.$route.params.cityid)
+        this.isFavorite = data.body.isFavorite
+      } catch (error) {
+        this.isFavorite = false
+      }
     },
 
     // 添加/删除 收藏
     async FavoriteFn() {
+      if (this.$store.state.token == '') return this.$toast.fail('请先登录！')
       if (this.isFavorite) {
         await delFavoritesApi(this.$route.params.cityid)
         this.isFavorite = false
